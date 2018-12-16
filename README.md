@@ -5,6 +5,8 @@ Requires Emacs > 26.
 ## Compliance
 For now, only VT520-compliant terminals are supported. Contribution is welcome.
 
+Tested in kitty, iTerm2, Alacritty and Terminal.app (macOS Mojave).
+
 ## Installation
 - Using `quelpa`
 ```elisp
