@@ -1,9 +1,9 @@
-;;; term-cursor.el --- Change cursor shape in terminal
+;;; term-cursor.el --- Change cursor shape in terminal -*- coding: utf-8; -*-
 
 ;; Version: 0.1
 ;; Author: h0d
 ;; URL: https://github.com/h0d
-;; Keywords: terminal, cursor
+;; Keywords: terminals
 ;; Package-Requires: ((emacs "26.1"))
 
 ;;; Commentary:
@@ -11,7 +11,7 @@
 ;; Send escape codes to change cursor in terminal.
 
 ;;; Code:
-(defun cursor-watcher (_symbol val op _watch)
+(defun term-cursor-watcher (_symbol val op _watch)
   "Change cursor through escape sequences depending on VAL.
 Waits for OP to be 'set."
   ;; Using VT520 DECSCUSR
@@ -43,13 +43,13 @@ Waits for OP to be 'set."
 (defun term-cursor-watch ()
   "Start watching cursor change."
   (interactive)
-  (add-variable-watcher 'cursor-type #'cursor-watcher))
+  (add-variable-watcher 'cursor-type #'term-cursor-watcher))
 
 ;;;###autoload
 (defun term-cursor-unwatch ()
   "Start watching cursor change."
   (interactive)
-  (remove-variable-watcher 'cursor-type #'cursor-watcher))
+  (remove-variable-watcher 'cursor-type #'term-cursor-watcher))
 
 (provide 'term-cursor)
 
