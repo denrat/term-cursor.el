@@ -5,6 +5,12 @@ Requires Emacs > 26.
 ## Compliance
 For now, only VT520-compliant terminals are supported. Contribution is welcome.
 
+## Installation
+```elisp
+;; Once `term-cursor.el' has been added to load path
+(require 'term-cursor)
+```
+
 ## Usage
 ```elisp
 ;; Turn on watcher
