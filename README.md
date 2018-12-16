@@ -6,6 +6,11 @@ Requires Emacs > 26.
 For now, only VT520-compliant terminals are supported. Contribution is welcome.
 
 ## Installation
+- Using `quelpa`
+```elisp
+(quelpa '(term-cursor :repo "h0d/term-cursor.el" :fetcher github))
+```
+- Manual
 ```elisp
 ;; Once `term-cursor.el' has been added to load path
 (require 'term-cursor)
