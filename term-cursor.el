@@ -58,7 +58,7 @@ Waits for OP to be 'set."
   (add-variable-watcher 'cursor-type #'term-cursor-watcher))
 
 (defun term-cursor-unwatch ()
-  "Start watching cursor change."
+  "Stop watching cursor change."
   (interactive)
   (remove-variable-watcher 'cursor-type #'term-cursor-watcher))
 
