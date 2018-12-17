@@ -20,11 +20,7 @@ Tested in kitty, iTerm2, Alacritty and Terminal.app (macOS Mojave).
 
 ## Usage
 ```elisp
-;; Turn on watcher
-(term-cursor-watch)
-
-;; Turn off watcher
-(term-cursor-unwatch)
+(term-cursor-mode)
 ```
 
 ## Disclaimer

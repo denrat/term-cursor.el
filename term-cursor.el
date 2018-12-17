@@ -1,6 +1,6 @@
 ;;; term-cursor.el --- Change cursor shape in terminal -*- coding: utf-8; -*-
 
-;; Version: 0.1
+;; Version: 0.2
 ;; Author: h0d
 ;; URL: https://github.com/h0d
 ;; Keywords: terminals
