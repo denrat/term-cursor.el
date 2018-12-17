@@ -9,13 +9,26 @@
 ;;; Commentary:
 
 ;; Send escape codes to change cursor in terminal.
+;; Using VT520 DECSCUSR
+;; from https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
 
 ;;; Code:
+
+(defgroup 'term-cursor nil
+  "Group"
+  :group 'terminals
+  :prefix 'term-cursor-)
+
+;;;###autoload
+(define-minor-mode term-cursor-mode
+  "Minor mode for term-cursor."
+  :group 'term-cursor
+  (if term-cursor-mode (term-cursor-watch)
+    (term-cursor-unwatch)))
+
 (defun term-cursor-watcher (_symbol val op _watch)
   "Change cursor through escape sequences depending on VAL.
 Waits for OP to be 'set."
-  ;; Using VT520 DECSCUSR
-  ;; from https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
   (unless (display-graphic-p)
     (when (eq op 'set)
       (cond
@@ -39,13 +52,11 @@ Waits for OP to be 'set."
        (t
 	(send-string-to-terminal "\e[1 q"))))))
 
-;;;###autoload
 (defun term-cursor-watch ()
   "Start watching cursor change."
   (interactive)
   (add-variable-watcher 'cursor-type #'term-cursor-watcher))
 
-;;;###autoload
 (defun term-cursor-unwatch ()
   "Start watching cursor change."
   (interactive)
