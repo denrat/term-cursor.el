@@ -14,7 +14,7 @@
 
 ;;; Code:
 
-(defgroup 'term-cursor nil
+(defgroup term-cursor nil
   "Group for term-cursor."
   :group 'terminals
   :prefix 'term-cursor-)
