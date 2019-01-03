@@ -1,4 +1,4 @@
-;;; term-cursor.el --- Change cursor shape in terminal -*- coding: utf-8; -*-
+;;; term-cursor.el --- Change cursor shape in terminal -*- lexical-binding: t; coding: utf-8; -*-
 
 ;; Version: 0.2
 ;; Author: h0d
@@ -8,9 +8,9 @@
 
 ;;; Commentary:
 
-;; Send escape codes to change cursor in terminal.
-;; Using VT520 DECSCUSR
-;; from https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
+;; Send terminal escape codes to change cursor shape in TTY Emacs.
+;; Using VT520 DECSCUSR (cf https://invisible-island.net/xterm/ctlseqs/ctlseqs.html).
+;; Does not interfere with GUI Emacs behavior.
 
 ;;; Code:
 
@@ -23,43 +23,44 @@
 (define-minor-mode term-cursor-mode
   "Minor mode for term-cursor."
   :group 'term-cursor
-  (if term-cursor-mode (term-cursor-watch)
+  (if term-cursor-mode
+      (term-cursor-watch)
     (term-cursor-unwatch)))
 
-(defun term-cursor-watcher (_symbol val op _watch)
-  "Change cursor through escape sequences depending on VAL.
-Waits for OP to be 'set."
-  (unless (display-graphic-p)
-    (when (eq op 'set)
-      (cond
-       ;; Symbol ('box, 'hollow, 'bar, 'hbar)
-       ((eq (type-of val) 'symbol)
-	(cond ((eq val 'bar)
-	       (send-string-to-terminal "\e[5 q"))
-	      ((eq val 'hbar)
-	       (send-string-to-terminal "\e[3 q"))
-	      (t
-	       (send-string-to-terminal "\e[1 q"))))
-       ;; Cons ((bar . WIDTH), (hbar . HEIGHT))
-       ((eq (type-of val) 'cons)
-	(cond ((eq (car val) 'bar)
-	       (send-string-to-terminal "\e[5 q"))
-	      ((eq (car val) 'hbar)
-	       (send-string-to-terminal "\e[3 q"))
-	      (t
-	       (send-string-to-terminal "\e[1 q"))))
-       ;; Anything else
-       (t
-	(send-string-to-terminal "\e[1 q"))))))
+;;;###autoload
+(define-globalized-minor-mode global-term-cursor-mode term-cursor-mode
+  (lambda ()
+    (term-cursor-mode t))
+  :group 'term-cursor)
+
+(defun term-cursor-watcher (_symbol cursor operation _watch)
+  "Change cursor shape through escape sequences depending on CURSOR.
+Waits for OPERATION to be 'set."
+  (unless (or (display-graphic-p)       	; Must be in TTY
+	      (not (eq operation 'set)))        ; A new value must be set to the variable
+
+    ;; CURSOR can be a `cons' (cf. `C-h v cursor-type')
+    ;; In that case, extract actual cursor type
+    (when (eq (type-of cursor) 'cons)
+      (setq cursor (car cursor)))
+
+    ;; Compare values and send corresponding escape code
+    (cond (;; Vertical bar
+	   (eq cursor 'bar)
+	   (send-string-to-terminal "\e[5 q"))
+	  (;; Underscore
+	   (eq cursor 'hbar)
+	   (send-string-to-terminal "\e[3 q"))
+	  (;; Box — default value
+	   t
+	   (send-string-to-terminal "\e[1 q")))))
 
 (defun term-cursor-watch ()
   "Start watching cursor change."
-  (interactive)
   (add-variable-watcher 'cursor-type #'term-cursor-watcher))
 
 (defun term-cursor-unwatch ()
   "Stop watching cursor change."
-  (interactive)
   (remove-variable-watcher 'cursor-type #'term-cursor-watcher))
 
 (provide 'term-cursor)
