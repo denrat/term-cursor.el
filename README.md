@@ -27,3 +27,12 @@ Tested in kitty, iTerm2, Alacritty and Terminal.app on macOS Mojave.
 ;; For all buffers
 (global-term-cursor-mode)
 ```
+
+## My terminal is not supported
+If you know the escape codes for your terminal, you can specify them in your configuration or through `M-x customize`.
+
+```elisp
+(setq term-cursor-bar-escape-code        "<your escape code>")
+(setq term-cursor-underline-escape-code  "<your escape code>")
+(setq term-cursor-block-escape-code      "<your escape code>")
+```
