@@ -1,6 +1,6 @@
 ;;; term-cursor.el --- Change cursor shape in terminal -*- lexical-binding: t; coding: utf-8; -*-
 
-;; Version: 0.2
+;; Version: 0.3
 ;; Author: h0d
 ;; URL: https://github.com/h0d
 ;; Keywords: terminals
@@ -18,6 +18,21 @@
   "Group for term-cursor."
   :group 'terminals
   :prefix 'term-cursor-)
+
+(defcustom term-cursor-bar-escape-code "\e[5 q"
+  "The escape code sent to terminal to set the cursor as a bar."
+  :type 'string
+  :group 'term-cursor)
+
+(defcustom term-cursor-underline-escape-code "\e[3 q"
+  "The escape code sent to terminal to set the cursor as an underscore."
+  :type 'string
+  :group 'term-cursor)
+
+(defcustom term-cursor-block-escape-code "\e[1 q"
+  "The escape code sent to terminal to set the cursor as a box."
+  :type 'string
+  :group 'term-cursor)
 
 ;;;###autoload
 (define-minor-mode term-cursor-mode
@@ -47,13 +62,13 @@ Waits for OPERATION to be 'set."
     ;; Compare values and send corresponding escape code
     (cond (;; Vertical bar
 	   (eq cursor 'bar)
-	   (send-string-to-terminal "\e[5 q"))
+	   (send-string-to-terminal term-cursor-bar-escape-code))
 	  (;; Underscore
 	   (eq cursor 'hbar)
-	   (send-string-to-terminal "\e[3 q"))
+	   (send-string-to-terminal term-cursor-underline-escape-code))
 	  (;; Box — default value
 	   t
-	   (send-string-to-terminal "\e[1 q")))))
+	   (send-string-to-terminal term-cursor-block-escape-code)))))
 
 (defun term-cursor-watch ()
   "Start watching cursor change."
