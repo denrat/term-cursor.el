@@ -74,23 +74,24 @@ If not supplied, CURSOR will be automatically set to `cursor-type'."
       (setq cursor cursor-type))
     ;; CURSOR can be a `cons' (cf. `C-h v cursor-type')
     ;; In that case, extract actual cursor type
-    (when (eq (type-of cursor) 'cons)
+    (when (consp cursor)
       (setq cursor (car cursor)))
 
     ;; Compare values and send corresponding escape code
     (cond (;; Vertical bar
 	   (eq cursor 'bar)
-	   (send-string-to-terminal term-cursor-escape-code-bar-steady))
+	   (send-string-to-terminal term-cursor-bar-steady))
 	  (;; Underscore
 	   (eq cursor 'hbar)
-	   (send-string-to-terminal term-cursor-escape-code-underline-steady))
+	   (send-string-to-terminal term-cursor-underline-steady))
 	  (;; Box — default value
 	   t
-	   (send-string-to-terminal term-cursor-escape-code-block-steady)))))
+	   (send-string-to-terminal term-cursor-block-steady)))))
 
 (defun term-cursor-watcher (_symbol cursor operation _watch)
   "Change cursor shape through escape sequences depending on CURSOR.
 Waits for OPERATION to be 'set."
+  ;; FIXME: investigate cursor being changed unexpectedly (e.g. with lsp-ui & js)
   (unless (not (eq operation 'set))  ; A new value must be set to the variable
     (term-cursor--eval cursor)))
 
