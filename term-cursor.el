@@ -19,18 +19,33 @@
   :group 'terminals
   :prefix 'term-cursor-)
 
-(defcustom term-cursor-bar-escape-code "\e[5 q"
-  "The escape code sent to terminal to set the cursor as a bar."
+(defcustom term-cursor-escape-code-block-blinking "\e[1 q"
+  "The escape code sent to terminal to set the cursor as a blinking box."
   :type 'string
   :group 'term-cursor)
 
-(defcustom term-cursor-underline-escape-code "\e[3 q"
-  "The escape code sent to terminal to set the cursor as an underscore."
+(defcustom term-cursor-escape-code-block-steady "\e[2 q"
+  "The escape code sent to terminal to set the cursor as a steady box."
   :type 'string
   :group 'term-cursor)
 
-(defcustom term-cursor-block-escape-code "\e[1 q"
-  "The escape code sent to terminal to set the cursor as a box."
+(defcustom term-cursor-escape-code-underline-blinking "\e[3 q"
+  "The escape code sent to terminal to set the cursor as a blinking underscore."
+  :type 'string
+  :group 'term-cursor)
+
+(defcustom term-cursor-escape-code-underline-steady "\e[4 q"
+  "The escape code sent to terminal to set the cursor as a steady underscore."
+  :type 'string
+  :group 'term-cursor)
+
+(defcustom term-cursor-escape-code-bar-blinking "\e[5 q"
+  "The escape code sent to terminal to set the cursor as a blinking bar."
+  :type 'string
+  :group 'term-cursor)
+
+(defcustom term-cursor-escape-code-bar-steady "\e[6 q"
+  "The escape code sent to terminal to set the cursor as a steady bar."
   :type 'string
   :group 'term-cursor)
 
@@ -48,12 +63,15 @@
     (term-cursor-mode t))
   :group 'term-cursor)
 
-(defun term-cursor-watcher (_symbol cursor operation _watch)
-  "Change cursor shape through escape sequences depending on CURSOR.
-Waits for OPERATION to be 'set."
-  (unless (or (display-graphic-p)       	; Must be in TTY
-	      (not (eq operation 'set)))        ; A new value must be set to the variable
+;; (add-hook 'lsp-ui-doc-frame-hook #'term-cursor--eval)
 
+(defun term-cursor--eval (&optional cursor)
+  "Send escape code to terminal according to the value of `cursor-type'.
+If not supplied, CURSOR will be automatically set to `cursor-type'."
+  (unless (display-graphic-p)		; Must be in TTY
+    ;; Get the cursor when not supplied by the watcher
+    (unless cursor
+      (setq cursor cursor-type))
     ;; CURSOR can be a `cons' (cf. `C-h v cursor-type')
     ;; In that case, extract actual cursor type
     (when (eq (type-of cursor) 'cons)
@@ -62,13 +80,19 @@ Waits for OPERATION to be 'set."
     ;; Compare values and send corresponding escape code
     (cond (;; Vertical bar
 	   (eq cursor 'bar)
-	   (send-string-to-terminal term-cursor-bar-escape-code))
+	   (send-string-to-terminal term-cursor-escape-code-bar-steady))
 	  (;; Underscore
 	   (eq cursor 'hbar)
-	   (send-string-to-terminal term-cursor-underline-escape-code))
+	   (send-string-to-terminal term-cursor-escape-code-underline-steady))
 	  (;; Box — default value
 	   t
-	   (send-string-to-terminal term-cursor-block-escape-code)))))
+	   (send-string-to-terminal term-cursor-escape-code-block-steady)))))
+
+(defun term-cursor-watcher (_symbol cursor operation _watch)
+  "Change cursor shape through escape sequences depending on CURSOR.
+Waits for OPERATION to be 'set."
+  (unless (not (eq operation 'set))  ; A new value must be set to the variable
+    (term-cursor--eval cursor)))
 
 (defun term-cursor-watch ()
   "Start watching cursor change."
