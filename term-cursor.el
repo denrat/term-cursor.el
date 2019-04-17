@@ -19,32 +19,32 @@
   :group 'terminals
   :prefix 'term-cursor-)
 
-(defcustom term-cursor-escape-code-block-blinking "\e[1 q"
+(defcustom term-cursor-block-blinking "\e[1 q"
   "The escape code sent to terminal to set the cursor as a blinking box."
   :type 'string
   :group 'term-cursor)
 
-(defcustom term-cursor-escape-code-block-steady "\e[2 q"
+(defcustom term-cursor-block-steady "\e[2 q"
   "The escape code sent to terminal to set the cursor as a steady box."
   :type 'string
   :group 'term-cursor)
 
-(defcustom term-cursor-escape-code-underline-blinking "\e[3 q"
+(defcustom term-cursor-underline-blinking "\e[3 q"
   "The escape code sent to terminal to set the cursor as a blinking underscore."
   :type 'string
   :group 'term-cursor)
 
-(defcustom term-cursor-escape-code-underline-steady "\e[4 q"
+(defcustom term-cursor-underline-steady "\e[4 q"
   "The escape code sent to terminal to set the cursor as a steady underscore."
   :type 'string
   :group 'term-cursor)
 
-(defcustom term-cursor-escape-code-bar-blinking "\e[5 q"
+(defcustom term-cursor-bar-blinking "\e[5 q"
   "The escape code sent to terminal to set the cursor as a blinking bar."
   :type 'string
   :group 'term-cursor)
 
-(defcustom term-cursor-escape-code-bar-steady "\e[6 q"
+(defcustom term-cursor-bar-steady "\e[6 q"
   "The escape code sent to terminal to set the cursor as a steady bar."
   :type 'string
   :group 'term-cursor)
