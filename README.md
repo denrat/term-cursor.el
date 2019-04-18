@@ -4,9 +4,10 @@ Display Emacs cursor in terminal as it would be in GUI, with or without `evil-mo
 Requires Emacs 26.
 
 ## Compliance
-For now, only VT520-compliant terminals are supported. Contribution is welcome.
+For now, only VT520-compliant terminals are supported out of the box. You can still use [your own escape codes](#my-terminal-is-not-supported).
 
 Tested in kitty, iTerm2, Alacritty and Terminal.app on macOS Mojave.
+Contribution is welcome.
 
 ## Installation
 - Using `quelpa`
@@ -18,6 +19,8 @@ Tested in kitty, iTerm2, Alacritty and Terminal.app on macOS Mojave.
 ;; Once `term-cursor.el' has been added to load path
 (require 'term-cursor)
 ```
+
+MELPA pending.
 
 ## Usage
 ```elisp
