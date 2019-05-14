@@ -51,7 +51,7 @@
   :group 'term-cursor)
 
 ;; Current cursor evaluation
-(defcustom term-cursor-triggers (list 'lsp-ui-doc-frame-hook)
+(defcustom term-cursor-triggers (list 'blink-cursor-mode-hook 'lsp-ui-doc-frame-hook)
   "Hooks to add to trigger `term-cursor--immediate'."
   :type 'list
   :group 'term-cursor)
@@ -75,6 +75,7 @@
 It can sometimes be a `cons' from which we only want the first element (cf `cursor-type')."
   (if (consp cursor)
       (car cursor)
+    ;; else
     cursor))
 
 (defun term-cursor--determine-esc (cursor blink)
@@ -115,7 +116,6 @@ Waits for OPERATION to be 'set."
 
 (defun term-cursor-watch ()
   "Start watching cursor change."
-  ;; TODO: watch other variables such as `blink-cursor-mode'
   (add-variable-watcher 'cursor-type #'term-cursor-watcher)
   (dolist (hook term-cursor-triggers)
     (add-hook hook #'term-cursor--immediate)))
