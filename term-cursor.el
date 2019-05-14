@@ -52,7 +52,8 @@
 
 ;; Current cursor evaluation
 (defcustom term-cursor-triggers (list 'blink-cursor-mode-hook 'lsp-ui-doc-frame-hook)
-  "Hooks to add to trigger `term-cursor--immediate'."
+  "Hooks to add when the variable watcher might not be enough.
+That is, hooks to trigger `term-cursor--immediate'."
   :type 'list
   :group 'term-cursor)
 
@@ -115,13 +116,13 @@ Waits for OPERATION to be 'set."
     (term-cursor--eval cursor blink-cursor-mode)))
 
 (defun term-cursor-watch ()
-  "Start watching cursor change."
+  "Start reacting to cursor change."
   (add-variable-watcher 'cursor-type #'term-cursor-watcher)
   (dolist (hook term-cursor-triggers)
     (add-hook hook #'term-cursor--immediate)))
 
 (defun term-cursor-unwatch ()
-  "Stop watching cursor change."
+  "Stop reacting to cursor change."
   (remove-variable-watcher 'cursor-type #'term-cursor-watcher)
   (dolist (hook term-cursor-triggers)
     (remove-hook hook #'term-cursor--immediate)))
