@@ -1,6 +1,6 @@
 ;;; term-cursor.el --- Change cursor shape in terminal -*- lexical-binding: t; coding: utf-8; -*-
 
-;; Version: 0.3
+;; Version: 0.4
 ;; Author: h0d
 ;; URL: https://github.com/h0d
 ;; Keywords: terminals
@@ -63,6 +63,7 @@ That is, hooks to trigger `term-cursor--immediate'."
   :group 'term-cursor
   (if term-cursor-mode
       (term-cursor-watch)
+    ;; else
     (term-cursor-unwatch)))
 
 ;;;###autoload
@@ -113,7 +114,7 @@ It can sometimes be a `cons' from which we only want the first element (cf `curs
   "Change cursor shape through escape sequences depending on CURSOR.
 Waits for OPERATION to be 'set."
   (when (eq operation 'set)  ; A new value must be set to the variable
-((term-cursor--eval cursor blink-cursor-mode)))
+    (term-cursor--eval cursor blink-cursor-mode)))
 
 (defun term-cursor-watch ()
   "Start reacting to cursor change."
