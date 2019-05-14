@@ -19,6 +19,7 @@
   :group 'terminals
   :prefix 'term-cursor-)
 
+;; Define escape codes for different cursors
 (defcustom term-cursor-block-blinking "\e[1 q"
   "The escape code sent to terminal to set the cursor as a blinking box."
   :type 'string
@@ -49,6 +50,12 @@
   :type 'string
   :group 'term-cursor)
 
+;; Current cursor evaluation
+(defcustom term-cursor-triggers (list 'lsp-ui-doc-frame-hook)
+  "Hooks to add to trigger `term-cursor--immediate'."
+  :type 'list
+  :group 'term-cursor)
+
 ;;;###autoload
 (define-minor-mode term-cursor-mode
   "Minor mode for term-cursor."
@@ -62,8 +69,6 @@
   (lambda ()
     (term-cursor-mode t))
   :group 'term-cursor)
-
-;; (add-hook 'lsp-ui-doc-frame-hook #'term-cursor--eval)
 
 (defun term-cursor--normalize (cursor)
   "Return the actual value of CURSOR.
@@ -98,21 +103,28 @@ It can sometimes be a `cons' from which we only want the first element (cf `curs
     (send-string-to-terminal
      (term-cursor--determine-esc cursor blink))))
 
+(defun term-cursor--immediate ()
+  "Send an escape code without waiting for `term-cursor-watcher'."
+  (term-cursor--eval cursor-type blink-cursor-mode))
+
 (defun term-cursor-watcher (_symbol cursor operation _watch)
   "Change cursor shape through escape sequences depending on CURSOR.
 Waits for OPERATION to be 'set."
-  ;; FIXME: investigate cursor being changed unexpectedly (e.g. with lsp-ui + js)
-  (unless (not (eq operation 'set))  ; A new value must be set to the variable
+  (unless (not (eq operation 'set)) ; A new value must be set to the variable
     (term-cursor--eval cursor blink-cursor-mode)))
 
 (defun term-cursor-watch ()
   "Start watching cursor change."
   ;; TODO: watch other variables such as `blink-cursor-mode'
-  (add-variable-watcher 'cursor-type #'term-cursor-watcher))
+  (add-variable-watcher 'cursor-type #'term-cursor-watcher)
+  (dolist (hook term-cursor-triggers)
+    (add-hook hook #'term-cursor--immediate)))
 
 (defun term-cursor-unwatch ()
   "Stop watching cursor change."
-  (remove-variable-watcher 'cursor-type #'term-cursor-watcher))
+  (remove-variable-watcher 'cursor-type #'term-cursor-watcher)
+  (dolist (hook term-cursor-triggers)
+    (remove-hook hook #'term-cursor--immediate)))
 
 (provide 'term-cursor)
 
