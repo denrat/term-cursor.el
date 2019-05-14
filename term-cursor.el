@@ -102,7 +102,7 @@ It can sometimes be a `cons' from which we only want the first element (cf `curs
   "Change cursor shape through escape sequences depending on CURSOR.
 Waits for OPERATION to be 'set."
   ;; FIXME: investigate cursor being changed unexpectedly (e.g. with lsp-ui + js)
-  (unless (not (eq operation 'set))  ; A new value must be set to the variable
+  (when (eq operation 'set)  ; A new value must be set to the variable
     (term-cursor--eval cursor blink-cursor-mode)))
 
 (defun term-cursor-watch ()
