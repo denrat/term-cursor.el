@@ -8,8 +8,11 @@
 
 ;;; Commentary:
 
-;; Send terminal escape codes to change cursor shape in TTY Emacs.
+;; Change cursor shape in TTY Emacs according to what it would be in the GUI.
+;; Send specific escape sequences to terminal emulator to trigger this cursor shape change.
+
 ;; Using VT520 DECSCUSR (cf https://invisible-island.net/xterm/ctlseqs/ctlseqs.html).
+;; Does not rely on `evil-mode' or any other dependency.
 ;; Does not interfere with GUI Emacs behavior.
 
 ;;; Code:
