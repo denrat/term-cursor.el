@@ -100,6 +100,8 @@
 ;; Hook-based cursor evaluation
 (defcustom term-cursor-triggers
   '('blink-cursor-mode-hook
+    'focus-in-hook
+    'focus-out-hook
     'lsp-ui-doc-frame-hook)
   "Hooks to add when the variable watcher might not be enough.
 That is, hooks calling `term-cursor--immediate'."
